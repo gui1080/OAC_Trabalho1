@@ -10,6 +10,8 @@
 	buffer:		.word   0					# configuracao default do RARS
 	size:		.word	4096				# numero de pixels da imagem
 
+	str_menu:	.asciz "Defina o número da opção desejada:\n\n1- Obtém Ponto\n2- Desenha ponto\n3- Desenha retângulo com preenchimento\n4- Desenha retângulo sem preenchimento\n5- Converte para o negativo da imagem\n6- Converte imagem para tons de vermelho\n7- Carrega imagem\n8- Encerra\n\n"									 
+
 	str_coord_x:	.asciz "Digite o valor da coordenada X: "	
 	str_coord_y: 	.asciz "Digite o valor da coordenada Y: "
 	str_pega_R:	.asciz "Digite o valor da componente R: "
@@ -18,6 +20,38 @@
 
 .text
 
+
+menu:
+
+	li a6, 0		# a6 resetado, onde fica a opção do usuário
+
+	li a7, 4
+  	la a0, str_menu		# printa o menu
+  	ecall
+  	
+     	li a7, 5		# da scanf
+  	ecall
+  		
+  	mv a6, a0		# botamos a6
+	li a2, 1		# comparação para branch de função 
+	
+	#função 1 aqui
+	
+	
+	li a2, 2
+	beq a6, a2, desenha_ponto
+	
+	#sucessivamente se incrementa a2, compara com a sua função respectiva
+	
+	li a2, 7
+	beq a6, a2, carrega_imagem
+	
+	li a2, 8
+	beq a6, a2, fim
+	
+
+carrega_imagem: 
+		
  	# define parâmetros e chama a função para carregar a imagem
 	la a0, image_name
 	lw a1, address
@@ -25,20 +59,27 @@
 	lw a3, size
 	jal load_image
 	
+	b menu
+	
+desenha_ponto:
 	
 	# parametro usado para fazer o ponto
 	lw a4, address2		
 	jal draw_point		#ta fazendo o ponto versão 1.0 é nois
+	
+	b menu
   	
-  	
+ fim:
+ 
   	# FIM
 	# definição da chamada de sistema para encerrar programa	
 	# parâmetros da chamada de sistema: a7=10
 	li a7, 10		
 	ecall
-
 	
 	#---------------------------FINAL DA MAIN---------------------------------
+
+	#------------------------------FUNÇÕES------------------------------------
 
 	#-------------------------------------------------------------------------
 	# falar da função aqui
