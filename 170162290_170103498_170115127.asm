@@ -40,6 +40,7 @@
 	str_cor:	.asciz "\nDigite os valores que descrevem a cor - \n"
 	str_espaco:	.asciz "\n\n"
 	str_erro:	.asciz "\nPor favor selecione uma opção válida!\n\n"
+	str_par_incor:  .asciz "\nInput incorreto, retornado para o menu\n\n"
 	
 
 .text
@@ -101,7 +102,7 @@
   	addi $x, $x, -1			# config x
   	mul  $x, $x, s1		
   		
-  	mv $dest, a4			# parametro do começo da imagem
+  	mv $dest, a4			# parâmetro do começo da imagem
   		
   	sub $dest, $dest, $y		# acumulamos o valor no destino
   	add $dest, $dest, $x
@@ -132,7 +133,7 @@
   	
   	mv  $dest, s0			# move o resultado para o destino
 
-	pop(s2)				# restaura o contexto
+	pop(s2)				# restaura contexto
 	pop(s1)
 	pop(s0)
 	
@@ -143,13 +144,12 @@
 	push(t3)			# guarda contexto
 	push(t2)
 
-
 	to_coord($x, $y, t2)
 	
 	mv t3, $cor
 	sw t3, 0(t2)			# printa na tela
 	
-	pop(t2)				# restaura o contexto
+	pop(t2)				# restaura contexto
 	pop(t3)
 	
 .end_macro  
@@ -187,7 +187,59 @@
 	pop(s1)
 	pop(s0)
 	
-.end_macro  
+.end_macro
+
+.macro verifica_coord($xy)		# função que verifica se a afirmativa 1 <= xy <= 64 é verdadeira
+
+	push(s0)			# guarda contexto
+	push(s1)
+
+	li s0, 64			# s0 e s1 como constantes
+	li s1, 1
+
+  	bgt $xy, s0, invalido_verifica_coord	# pula para invalido caso não seja
+  	blt $xy, s1, invalido_verifica_coord
+  	b fim_verifica_coord
+  	
+invalido_verifica_coord:
+	printf(str_par_incor)
+	
+	pop(s1)				# restaura contexto
+	pop(s0)
+	
+	b menu
+fim_verifica_coord:
+
+	pop(s1)				# restaura contexto
+	pop(s0)
+	
+.end_macro
+
+.macro verifica_rgb($RGB)		# função que verifica se a afirmativa 0 <= RGB <= 255 é verdadeira
+
+	push(s0)			# guarda contexto
+	push(s1)
+
+	li s0, 255			# s0 e s1 como constantes
+	li s1, 0
+
+  	bgt $RGB, s0, invalido_verifica_rgb	# pula para invalido caso não seja
+  	blt $RGB, s1, invalido_verifica_rgb
+  	b fim_verifica_rgb
+  	
+invalido_verifica_rgb:
+	printf(str_par_incor)
+	
+	pop(s1)				# restaura contexto
+	pop(s0)
+	
+	b menu
+fim_verifica_rgb:
+
+	pop(s1)				# restaura contexto
+	pop(s0)
+	
+.end_macro
 #-------------------------------------------------------------------------------------------
 
 	### Programa Efetivo ###
@@ -197,11 +249,11 @@
 		li a6, 0			# inicializa a variavel de comparação
 
 		printf(str_menu)				
-     		scanf(a6)			# le do usuario o input da escolha
+     		scanf(a6)			# lê do usuario o input da escolha
      
      		# switch case 
      		
-		li a2, 1			# comparamos sempre o input do usuario em a6 com a variavel a2			
+		li a2, 1			# comparamos sempre o input do usuário em a6 com a variavel a2			
 		beq a6, a2, pega_ponto		# a2 é atualizada sempre antes de uma comparação
 						# se a comparação é satisfeita, pulamos para a parte de chamada de função
 		li a2, 2
@@ -315,17 +367,27 @@
   		printf(str_coord_x)		# leitura das coordenadas
   	  	scanf(t0)
   		
+  		verifica_coord(t0)		# verifica intervalo
+  		
   		printf(str_coord_y)
   		scanf(t1)
+  		
+  		verifica_coord(t1)		# verifica intervalo
   		
  	 	printf(str_pega_R)		# leitura da cor
 		scanf(t2)
 	
+		verifica_rgb(t2)		# verifica intervalo
+	
    		printf(str_pega_G)	
   		scanf(t3)
   		
+  		verifica_rgb(t3)		# verifica intervalo
+  		
    		printf(str_pega_B)			
  		scanf(t4)
+  		
+  		verifica_rgb(t4)		# verifica intervalo
   		
 		RGB_maker(t2, t3, t4, t6)	# formatamos o input para o formato correto de desenho
 	
@@ -352,8 +414,12 @@
 		printf(str_coord_x)		# leitura das coordenadas
     		scanf(t0)
   		
+  		verifica_coord(t0)		# verifica intervalo
+  		
   		printf(str_coord_y)
   		scanf(t1)
+  		
+  		verifica_coord(t1)		# verifica intervalo
   		
   		break_RGB(t0, t1, t2, t3, t4) 
   	
@@ -404,16 +470,24 @@
 		printf(str_coord_x)
     		scanf(t0)            		# X inicial
   		
+  		verifica_coord(t0)		# verifica intervalo
+  		
   		printf(str_coord_y)
   		scanf(t1)            		# Y inicial
+  		
+  		verifica_coord(t1)		# verifica intervalo
   		
   		printf(str_coord2)
   		
   		printf(str_coord_x)
     		scanf(t2)             		# X final
   		
+  		verifica_coord(t2)		# verifica intervalo
+  		
   		printf(str_coord_y)
   		scanf(t3)            		# Y final
+ 	
+ 		verifica_coord(t3)		# verifica intervalo
  	
  		bge t2, t0, rect_f_continue
  		push t2		    		# troca os 2 caso a afirmativa Xfinal > Xinicial é falsa
@@ -435,11 +509,17 @@
   		printf(str_pega_R)		# leitura das cores
 		scanf(t4)
 	
+		verifica_rgb(t4)		# verifica intervalo
+	
    		printf(str_pega_G)
   		scanf(t5)
   			
+  		verifica_rgb(t5)		# verifica intervalo
+  			
    		printf(str_pega_B)			
  		scanf(t6)
+  		
+  		verifica_rgb(t6)		# verifica intervalo
   		
  		RGB_maker(t4, t5, t6, t6)   	# os valores RGB vão para t6 no formato correto de print
 
@@ -470,7 +550,7 @@
 		jr ra			# retornamos da função 
 	
 	#-------------------------------------------------------------------------
-	# Função draw_rect_full: Responsável por desenhar a borda de um retângulo, 
+	# Função draw_empty_rectangle: Responsável por desenhar a borda de um retângulo, 
 	# dado a cor e 2 pontos de diagonais opostas (cartesiano)
 	#
 	# Parametros:
@@ -496,16 +576,24 @@
 		printf(str_coord_x)
    	 	scanf(t0)             		# X 1
   		
+  		verifica_coord(t0)		# verifica intervalo
+  		
   		printf(str_coord_y)
   		scanf(t1)            		# Y 1
+  		
+  		verifica_coord(t1)		# verifica intervalo
   		
   		printf(str_coord2)
   		
   		printf(str_coord_x)
     		scanf(t2)             		# X 2
   		
+  		verifica_coord(t2)		# verifica intervalo
+  		
   		printf(str_coord_y)
   		scanf(t3)            		# Y 2
+ 		
+ 		verifica_coord(t3)		# verifica intervalo
  		
  		bge t2, t0, rect_vazio_continue
  		push t2		     		# troca os 2 caso a afirmativa Xfinal > Xinicial é falsa
@@ -527,11 +615,17 @@
   		printf(str_pega_R)		# leitura das cores
 		scanf(t4)
 	
+		verifica_rgb(t4)		# verifica intervalo
+	
    		printf(str_pega_G)
   		scanf(t5)
   			
+  		verifica_rgb(t5)		# verifica intervalo
+  			
    		printf(str_pega_B)		
  		scanf(t6)
+  		
+  		verifica_rgb(t6)		# verifica intervalo
   		
  		RGB_maker(t4, t5, t6, t6)    	# RGB vai no formato correto para t6
 
@@ -587,50 +681,63 @@
 	# RGB para o sua forma negativa
 	#
 	# Parametros:
+	# - Coordenada de início da imagem (passada pelo programa)
+	#
+	# Como funciona: A partir do endereço de início da imagem, muda, para cada pixel,
+	# sua cor, de R G B para 255 - R, 255 - G, 255 - B respectivamente. Para isso usa as
+	# macros break_RGB para pegar os parâmetros e alterá-los, RGB_maker para juntar os parâmetros
+	# novamente e enfim a macro draw_point_v2 para reescrever o ponto.
+	#
 	
 
 	convert_negative:
 
 		li t0, 1 			# x
 		li t1, 1			# y
-		li s0, 255
+		li s0, 255			# s0 e s1 como constantes
 		li s1, 65
 
 	loop_convert_negative:
 			
-		break_RGB(t0, t1, t2, t3, t4)
+		break_RGB(t0, t1, t2, t3, t4)	# separa R G e B do hexadecimal
 	
-		sub t2, s0, t2
+		sub t2, s0, t2			# reconfigura a cor
 		sub t3, s0, t3
 		sub t4, s0, t4
 		
-		RGB_maker(t2, t3, t4, t5)
+		RGB_maker(t2, t3, t4, t5)	# junta R G e B, t5 recebe a cor compacta
 
-		draw_point_v2(t0, t1, t5)
+		draw_point_v2(t0, t1, t5)	# reescreve o novo ponto na tela
 	
-		addi t0, t0, 1
+		addi t0, t0, 1			# prepara próximo pixel à direita
 	
-		beq  t0, s1, anda_y
+		beq  t0, s1, anda_y		# se x chegar no limite incrementa y
 	
 		b loop_convert_negative
 	
 	anda_y:
-		beq  t1, s1, fim_convert_negative
-		addi t1, t1, 1
+		beq  t1, s1, fim_convert_negative	# fim, caso y tenha chegado no limite
+		addi t1, t1, 1				# prepara próxima linha de pixels acima da atual
 		li t0, 1
 	
 		b loop_convert_negative
 	
 	
 	fim_convert_negative:
-		jr ra
+		jr ra				# retorna
 
 	#-------------------------------------------------------------------------
 	# Função convert_red: Responsável por passar uma imagem com valores em
 	# RGB para o sua forma avermelhada, apenas com seus valores da componente
-	# R (red) sendo levados em consideração
+	# R (red) sendo levados em consideração.
 	#
 	# Parametros:
+	# - Coordenada de início da imagem (passada pelo programa)
+	#
+	# Como funciona: A partir do endereço de início da imagem, muda, para cada pixel,
+	# sua cor, de R G B para R, 0, 0 respectivamente. Para isso usa as
+	# macros break_RGB para pegar os parâmetros e alterá-los, RGB_maker para juntar os parâmetros
+	# novamente e enfim a macro draw_point_v2 para reescrever o ponto.
 	#
 	
 
@@ -638,35 +745,35 @@
 
 		li t0, 1 			# x
 		li t1, 1			# y
-		li s1, 65
+		li s1, 65			# s1 como constante
 
 	loop_convert_red:
 			
-		break_RGB(t0, t1, t2, t3, t4)
+		break_RGB(t0, t1, t2, t3, t4)   # separa R G e B do hexadecimal
 	
-		li t3, 0
+		li t3, 0			# t3 e t4 como constantes
 		li t4, 0 
 	
-		RGB_maker(t2, t3, t4, t5)
+		RGB_maker(t2, t3, t4, t5)	# junta R G e B, t5 recebe a cor compacta
 
-		draw_point_v2(t0, t1, t5)
+		draw_point_v2(t0, t1, t5) 	# reescreve o novo ponto na tela
 	
-		addi t0, t0, 1
+		addi t0, t0, 1			# prepara próximo pixel à direita
 	
-		beq  t0, s1, anda_y_r
+		beq  t0, s1, anda_y_r		# se x chegar no limite incrementa y
 	
 		b loop_convert_red
 	
 	anda_y_r:
-		beq  t1, s1, fim_convert_red
-		addi t1, t1, 1
+		beq  t1, s1, fim_convert_red	# fim, caso y tenha chegado no limite
+		addi t1, t1, 1			# prepara próxima linha de pixels acima da atual
 		li t0, 1
 		
 		b loop_convert_red
 		
 	
 	fim_convert_red:
-		jr ra							
+		jr ra			# retorna				
 																					
 	#-------------------------------------------------------------------------
 	# Funcao load_image: carrega uma imagem em formato RAW RGB para memoria
