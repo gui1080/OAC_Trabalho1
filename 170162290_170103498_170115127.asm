@@ -1,13 +1,13 @@
 #-------------------------------------------------------------------------------------------
-#		OrganizaÁ„o e Arquitetura de Computadores - Turma C 
+#		Organiza√ß√£o e Arquitetura de Computadores - Turma C 
 #			Trabalho 1 - Assembly RISC-V
 #				Unb -2/2019
 #
-# Nome: Gabriel Matheus			MatrÌcula: 17/0103498
-# Nome: Guilherme Braga			MatrÌcula: 17/0162290
-# Nome: Victor Eduardo			MatrÌcula: 17/0115127
+# Nome: Gabriel Matheus			Matr√≠cula: 17/0103498
+# Nome: Guilherme Braga			Matr√≠cula: 17/0162290
+# Nome: Victor Eduardo			Matr√≠cula: 17/0115127
 #
-# Link para o trabalho no Github --> https://github.com/therealguib545/OAC_Trabalho1
+# Link para o trabalho no Github --> https://github.com/gui1080/OAC_Trabalho1
 #
 #-------------------------------------------------------------------------------------------
 
@@ -22,9 +22,9 @@
 	buffer:		.word   0			        # configuracao default do RARS
 	size:		.word	4096				# numero de pixels da imagem
 
-	# Strings de interaÁ„o com o usu·rio
+	# Strings de intera√ß√£o com o usu√°rio
 
-	str_menu:	.asciz "Defina o n˙mero da opÁ„o desejada:\n\n1- ObtÈm Ponto\n2- Desenha ponto\n3- Desenha ret‚ngulo com preenchimento\n4- Desenha ret‚ngulo sem preenchimento\n5- Converte para o negativo da imagem\n6- Converte imagem para tons de vermelho\n7- Carrega imagem\n8- Encerra\n\n"									 
+	str_menu:	.asciz "Defina o n√∫mero da op√ß√£o desejada:\n\n1- Obt√©m Ponto\n2- Desenha ponto\n3- Desenha ret√¢ngulo com preenchimento\n4- Desenha ret√¢ngulo sem preenchimento\n5- Converte para o negativo da imagem\n6- Converte imagem para tons de vermelho\n7- Carrega imagem\n8- Encerra\n\n"									 
 	str_coord_x:	.asciz "Digite o valor da coordenada X: "	
 	str_coord_y: 	.asciz "Digite o valor da coordenada Y: "
 	str_coord_xf:	.asciz "Digite o valor da coordenada Xf: "	
@@ -39,16 +39,16 @@
 	str_coord2:	.asciz "\nDigite a sua segunda coordenada - \n"
 	str_cor:	.asciz "\nDigite os valores que descrevem a cor - \n"
 	str_espaco:	.asciz "\n\n"
-	str_erro:	.asciz "\nPor favor selecione uma opÁ„o v·lida!\n\n"
+	str_erro:	.asciz "\nPor favor selecione uma op√ß√£o v√°lida!\n\n"
 	str_par_incor:  .asciz "\nInput incorreto, retornado para o menu\n\n"
 	
 
 .text
 
 #-------------------------------------------------------------------------------------------
-### CriaÁ„o de macros auxiliares para as funÁıes ###
+### Cria√ß√£o de macros auxiliares para as fun√ß√µes ###
 
-.macro printf($string)			# funÁ„o que printa uma string na tela
+.macro printf($string)			# fun√ß√£o que printa uma string na tela
 
 	li a7, 4
   	la a0, $string
@@ -56,7 +56,7 @@
   	
 .end_macro
   
-.macro scanf($dest)			# funÁ„o que lÍ input e salva no destino
+.macro scanf($dest)			# fun√ß√£o que l√™ input e salva no destino
 		 	
   	li a7, 5
   	ecall	
@@ -64,23 +64,23 @@
   	
 .end_macro 	 	
   
-.macro push($pushAddr)			# funÁ„o que armazena resgistro na pilha
+.macro push($pushAddr)			# fun√ß√£o que armazena resgistro na pilha
 
 	addi sp, sp, -4			# atualizamos o Stack Pointer
 	sw   $pushAddr, 0(sp)		# e damos store word na pilha (para armazenar) no lugar correto
 
 .end_macro  
 
-.macro pop($popAddr)			# funÁ„o que retira resgistro da pilha
+.macro pop($popAddr)			# fun√ß√£o que retira resgistro da pilha
 
 	lw  $popAddr, 0(sp)		# e damos load word na pilha (para ler o que estava guardado) no lugar correspondente
   	addi sp, sp, 4			# atualizamos o Stack Pointer
 
 .end_macro 
 	 	 		 	 		 	 		 	 	 	 	 	 	
-.macro to_coord($x, $y, $dest)		# funÁ„o que transforma x e y no endereÁo de memÛria referente, devolvendo no destino o endereÁo formatado
+.macro to_coord($x, $y, $dest)		# fun√ß√£o que transforma x e y no endere√ßo de mem√≥ria referente, devolvendo no destino o endere√ßo formatado
  				
- 	# para o funcionamento desta funÁ„o, usamos a conta: 
+ 	# para o funcionamento desta fun√ß√£o, usamos a conta: 
  	
  	# numX = x
  	# numY = (64+y)
@@ -102,7 +102,7 @@
   	addi $x, $x, -1			# config x
   	mul  $x, $x, s1		
   		
-  	mv $dest, a4			# par‚metro do comeÁo da imagem
+  	mv $dest, a4			# par√¢metro do come√ßo da imagem
   		
   	sub $dest, $dest, $y		# acumulamos o valor no destino
   	add $dest, $dest, $x
@@ -114,7 +114,7 @@
   	
 .end_macro
 
-.macro RGB_maker($R, $G, $B, $dest) 	# transforma R, G e B em um ˙nico hexa e devolve no destino
+.macro RGB_maker($R, $G, $B, $dest) 	# transforma R, G e B em um √∫nico hexa e devolve no destino
 	
 	push(s0)			# guarda contexto
 	push(s1)
@@ -139,7 +139,7 @@
 	
 .end_macro
 
-.macro draw_point_v2($x, $y, $cor)	# funÁ„o que desenha o ponto na tela, dada as coordenadas x e y e a cor desejada
+.macro draw_point_v2($x, $y, $cor)	# fun√ß√£o que desenha o ponto na tela, dada as coordenadas x e y e a cor desejada
 
 	push(t3)			# guarda contexto
 	push(t2)
@@ -189,7 +189,7 @@
 	
 .end_macro
 
-.macro verifica_coord($xy)		# funÁ„o que verifica se a afirmativa 1 <= xy <= 64 È verdadeira
+.macro verifica_coord($xy)		# fun√ß√£o que verifica se a afirmativa 1 <= xy <= 64 √© verdadeira
 
 	push(s0)			# guarda contexto
 	push(s1)
@@ -197,7 +197,7 @@
 	li s0, 64			# s0 e s1 como constantes
 	li s1, 1
 
-  	bgt $xy, s0, invalido_verifica_coord	# pula para invalido caso n„o seja
+  	bgt $xy, s0, invalido_verifica_coord	# pula para invalido caso n√£o seja
   	blt $xy, s1, invalido_verifica_coord
   	b fim_verifica_coord
   	
@@ -215,7 +215,7 @@ fim_verifica_coord:
 	
 .end_macro
 
-.macro verifica_rgb($RGB)		# funÁ„o que verifica se a afirmativa 0 <= RGB <= 255 È verdadeira
+.macro verifica_rgb($RGB)		# fun√ß√£o que verifica se a afirmativa 0 <= RGB <= 255 √© verdadeira
 
 	push(s0)			# guarda contexto
 	push(s1)
@@ -223,7 +223,7 @@ fim_verifica_coord:
 	li s0, 255			# s0 e s1 como constantes
 	li s1, 0
 
-  	bgt $RGB, s0, invalido_verifica_rgb	# pula para invalido caso n„o seja
+  	bgt $RGB, s0, invalido_verifica_rgb	# pula para invalido caso n√£o seja
   	blt $RGB, s1, invalido_verifica_rgb
   	b fim_verifica_rgb
   	
@@ -246,16 +246,16 @@ fim_verifica_rgb:
 
 	menu:					# loop base do programa
 
-		li a6, 0			# inicializa a variavel de comparaÁ„o
+		li a6, 0			# inicializa a variavel de compara√ß√£o
 
 		printf(str_menu)				
-     		scanf(a6)			# lÍ do usuario o input da escolha
+     		scanf(a6)			# l√™ do usuario o input da escolha
      
      		# switch case 
      		
-		li a2, 1			# comparamos sempre o input do usu·rio em a6 com a variavel a2			
-		beq a6, a2, pega_ponto		# a2 È atualizada sempre antes de uma comparaÁ„o
-						# se a comparaÁ„o È satisfeita, pulamos para a parte de chamada de funÁ„o
+		li a2, 1			# comparamos sempre o input do usu√°rio em a6 com a variavel a2			
+		beq a6, a2, pega_ponto		# a2 √© atualizada sempre antes de uma compara√ß√£o
+						# se a compara√ß√£o √© satisfeita, pulamos para a parte de chamada de fun√ß√£o
 		li a2, 2
 		beq a6, a2, desenha_ponto
 	
@@ -277,89 +277,89 @@ fim_verifica_rgb:
 		li a2, 8
 		beq a6, a2, fim
 		
-		printf(str_erro)		# Mostramos uma mensagem de erro caso o input do usu·rio n„o seja uma opÁ„o real
+		printf(str_erro)		# Mostramos uma mensagem de erro caso o input do usu√°rio n√£o seja uma op√ß√£o real
 	
 		b menu				# jump default, onde esperamos o input correto
 		
 	#-------------------------------------------------------------------------
-	# ¡rea para a chamada de funÁıes 
-	# Primeiro, define-se os par‚metros corretos para cada chamada de funÁ„o.
-	# ApÛs a defiÁ„o, chamamos a funÁ„o desejada e damos retorno para o comeÁo do Menu
+	# √Årea para a chamada de fun√ß√µes 
+	# Primeiro, define-se os par√¢metros corretos para cada chamada de fun√ß√£o.
+	# Ap√≥s a defi√ß√£o, chamamos a fun√ß√£o desejada e damos retorno para o come√ßo do Menu
 	#
 	
 	carrega_imagem: 
 		
- 		la a0, image_name		# define par‚metros e chama a funÁ„o para carregar a imagem
+ 		la a0, image_name		# define par√¢metros e chama a fun√ß√£o para carregar a imagem
 		lw a1, address
 		la a2, buffer
 		lw a3, size
-		jal load_image			# chama a funÁ„o
+		jal load_image			# chama a fun√ß√£o
 	
 		b menu				# retorna pro menu
 	
 	desenha_ponto:
 	
-		lw a4, addr_coord		# configura par‚mentro do 0 cartesiano
-		jal draw_point			# chama a funÁ„o
+		lw a4, addr_coord		# configura par√¢mentro do 0 cartesiano
+		jal draw_point			# chama a fun√ß√£o
 	
 		b menu				# retorna pro menu
   	
 	pega_ponto:
 	
-		lw a4, addr_coord		# configura par‚mentro do 0 cartesiano
-		jal get_point			# chama a funÁ„o
+		lw a4, addr_coord		# configura par√¢mentro do 0 cartesiano
+		jal get_point			# chama a fun√ß√£o
 	
 		b menu 				# retorna pro menu
 	
 	desenha_ret_p:
 
-		lw a4, addr_coord		# configura par‚mentro do 0 cartesiano
-		jal draw_full_rectangle		# chama a funÁ„o
+		lw a4, addr_coord		# configura par√¢mentro do 0 cartesiano
+		jal draw_full_rectangle		# chama a fun√ß√£o
  
  		b menu 				# retorna pro menu
  	
 	desenha_ret_vazio:
 
-		lw a4, addr_coord		# configura par‚mentro do 0 cartesiano
-		jal draw_empty_rectangle	# chama a funÁ„o
+		lw a4, addr_coord		# configura par√¢mentro do 0 cartesiano
+		jal draw_empty_rectangle	# chama a fun√ß√£o
 	
 		b menu 				# retorna pro menu
 	
 	inverte_imagem:
 
-		lw a4, addr_coord		# configura par‚mentro do 0 cartesiano
-		jal convert_negative		# chama a funÁ„o	
+		lw a4, addr_coord		# configura par√¢mentro do 0 cartesiano
+		jal convert_negative		# chama a fun√ß√£o	
 	
 		b menu 				# retorna pro menu
  
  	converte_vermelho:
 
-		lw a4, addr_coord		# configura par‚mentro do 0 cartesiano
-		jal convert_red			# chama a funÁ„o
+		lw a4, addr_coord		# configura par√¢mentro do 0 cartesiano
+		jal convert_red			# chama a fun√ß√£o
 	
 		b menu 				# retorna pro menu
  
 	fim:
 	
 		li a7, 10			# FIM	
-		ecall				# definiÁ„o da chamada de sistema para encerrar programa
+		ecall				# defini√ß√£o da chamada de sistema para encerrar programa
 	
 	#---------------------------FINAL DA MAIN---------------------------------
 
-	#------------------------------FUN«’ES------------------------------------
+	#------------------------------FUN√á√ïES------------------------------------
 	
 	#-------------------------------------------------------------------------
-	# FunÁ„o draw_point: Respons·vel por desenhar um ˙nico ponto na tela, dada 
+	# Fun√ß√£o draw_point: Respons√°vel por desenhar um √∫nico ponto na tela, dada 
 	# as coordenadas e a cor
 	#
 	# Parametros:
-	# - Coordenada de inÌcio da imagem (passada pelo programa)
-	# - Input do usu·rio para X e Y (coordenadas)
-	# - Input do usu·rio para R, G e B (descriÁ„o da cor do ponto a ser desenhado)
+	# - Coordenada de in√≠cio da imagem (passada pelo programa)
+	# - Input do usu√°rio para X e Y (coordenadas)
+	# - Input do usu√°rio para R, G e B (descri√ß√£o da cor do ponto a ser desenhado)
 	#
-	# Como funciona: Com o input do usu·rio, a funÁ„o calcula o endereÁo correspondente 
-	# no bitmap, acessa esse endereÁo e escreve o valor de cor formatado neste local da
-	# memÛria. 
+	# Como funciona: Com o input do usu√°rio, a fun√ß√£o calcula o endere√ßo correspondente 
+	# no bitmap, acessa esse endere√ßo e escreve o valor de cor formatado neste local da
+	# mem√≥ria. 
 	#
 		
 	draw_point:
@@ -393,20 +393,20 @@ fim_verifica_rgb:
 	
 		draw_point_v2(t0, t1, t6)	# desenha no bitmap
 
-		jr ra				# retorna da funÁ„o 
+		jr ra				# retorna da fun√ß√£o 
 
 	#-------------------------------------------------------------------------
-	# FunÁ„o get_point: Respons·vel por ler a cor de um ponto dada as coordenadas
+	# Fun√ß√£o get_point: Respons√°vel por ler a cor de um ponto dada as coordenadas
 	#
 	# Parametros:
-	# - Coordenada de inÌcio da imagem (passada pelo programa)
-	# - Input do usu·rio para X e Y (coordenadas)
+	# - Coordenada de in√≠cio da imagem (passada pelo programa)
+	# - Input do usu√°rio para X e Y (coordenadas)
 	#
-	# Como funciona: Acessamos o endereÁo dado pelo usu·rio (apÛs formatado com a
-	# respectiva macro), e ent„o acessamos os valoresem RGB. Os valores s„o dados como:
-	# xxRRGGBB (em bits). Usando divisıes para "isolar" os bits menos significativos
-	# e rotaÁıes para fazer com que os valores que se deseja ler sejam os que est„o mais 
-	# ‡ direita, podemos isolar os valores respectivos e fornece-los ao usu·rio.  
+	# Como funciona: Acessamos o endere√ßo dado pelo usu√°rio (ap√≥s formatado com a
+	# respectiva macro), e ent√£o acessamos os valoresem RGB. Os valores s√£o dados como:
+	# xxRRGGBB (em bits). Usando divis√µes para "isolar" os bits menos significativos
+	# e rota√ß√µes para fazer com que os valores que se deseja ler sejam os que est√£o mais 
+	# √† direita, podemos isolar os valores respectivos e fornece-los ao usu√°rio.  
 	#
 		
 	get_point:
@@ -425,13 +425,13 @@ fim_verifica_rgb:
   	
   		printf(str_comp_R)
   	
-  		li a7, 1			# printa n˙mero
+  		li a7, 1			# printa n√∫mero
   		mv a0, t2
   		ecall
   		
   		printf(str_comp_G)
   	
-  		li a7, 1			# printa n˙mero
+  		li a7, 1			# printa n√∫mero
   		mv a0, t3
   		ecall 
   		
@@ -446,20 +446,20 @@ fim_verifica_rgb:
   		jr ra				# retorna	
 	
 	#-------------------------------------------------------------------------
-	# FunÁ„o draw_full_rectangle: Respons·vel por desenhar um ret‚ngulo cheio dado a 
+	# Fun√ß√£o draw_full_rectangle: Respons√°vel por desenhar um ret√¢ngulo cheio dado a 
 	# cor e 2 pontos de diagonais opostas (cartesiano)
 	#
 	# Parametros:
-	# - Coordenada de inÌcio da imagem (passada pelo programa)
-	# - Input do usu·rio para X e Y (coordenadas iniciais)
-	# - Input do usu·rio para X e Y (coordenadas finais)
-	# - Input do usu·rio para R, G e B (descriÁ„o da cor do ret‚ngulo a ser desenhado)
+	# - Coordenada de in√≠cio da imagem (passada pelo programa)
+	# - Input do usu√°rio para X e Y (coordenadas iniciais)
+	# - Input do usu√°rio para X e Y (coordenadas finais)
+	# - Input do usu√°rio para R, G e B (descri√ß√£o da cor do ret√¢ngulo a ser desenhado)
 	#
-	# Como funciona: Com os pontos dados pelo usu·rio (e apÛs a definiÁ„o de qual È o ponto mais
-	# perto da origem e qual È o ponto mais longe da origem), e o valor RGB, definimos as vari·veis "delta X" e
-	# "delta Y", sendo estas as variaÁıes de X e Y entre as coordenadas. Com o auxÌlio de um contador, 
-	# printamos os pontos com um dado valor RGB ao longo do eixo X (soma-se 0x4 ao endereÁo para deslocarmos para o ponto ao lado em X),
-	# "delta X" vezes. ApÛs essa operaÁ„o, vamos para a linha de cima ‡ linha (soma-se 0x100) de inicio e printamos a linha em X. 
+	# Como funciona: Com os pontos dados pelo usu√°rio (e ap√≥s a defini√ß√£o de qual √© o ponto mais
+	# perto da origem e qual √© o ponto mais longe da origem), e o valor RGB, definimos as vari√°veis "delta X" e
+	# "delta Y", sendo estas as varia√ß√µes de X e Y entre as coordenadas. Com o aux√≠lio de um contador, 
+	# printamos os pontos com um dado valor RGB ao longo do eixo X (soma-se 0x4 ao endere√ßo para deslocarmos para o ponto ao lado em X),
+	# "delta X" vezes. Ap√≥s essa opera√ß√£o, vamos para a linha de cima √† linha (soma-se 0x100) de inicio e printamos a linha em X. 
 	# Subtraimos o que foi somado para deslocarmos no eixo X. Repetimos o processo "delta Y" vezes. 
 	#
 										
@@ -490,14 +490,14 @@ fim_verifica_rgb:
  		verifica_coord(t3)		# verifica intervalo
  	
  		bge t2, t0, rect_f_continue
- 		push t2		    		# troca os 2 caso a afirmativa Xfinal > Xinicial È falsa
+ 		push t2		    		# troca os 2 caso a afirmativa Xfinal > Xinicial √© falsa
  		push t0
  		pop t2
  		pop t0
 
 	rect_f_continue:
  		bge t3, t1, rect_f_continue2
- 		push t3		     		# troca os 2 caso a afirmativa Yfinal > Yinicial È falsa
+ 		push t3		     		# troca os 2 caso a afirmativa Yfinal > Yinicial √© falsa
  		push t1
  		pop t3
  		pop t1
@@ -521,14 +521,14 @@ fim_verifica_rgb:
   		
   		verifica_rgb(t6)		# verifica intervalo
   		
- 		RGB_maker(t4, t5, t6, t6)   	# os valores RGB v„o para t6 no formato correto de print
+ 		RGB_maker(t4, t5, t6, t6)   	# os valores RGB v√£o para t6 no formato correto de print
 
 		addi t2, t2, 1
 		mv t4, t0			# contador do x
 		mv t5, t1			# contador do y
 		
 	loop_ret:				# desenha horizontal x
-		beq t4, t2, zera_x_incrementa_y		# checamos condiÁ„o de update em Y 
+		beq t4, t2, zera_x_incrementa_y		# checamos condi√ß√£o de update em Y 
 		
 		draw_point_v2(t4, t5, t6)		# desenhamos ponto a ponto em X
 	
@@ -538,7 +538,7 @@ fim_verifica_rgb:
 	
 	zera_x_incrementa_y:			# desenha vertical y
 
-		beq t5, t3, fim_rect_f		# checamos se estamos no ˙ltimo Y possivel
+		beq t5, t3, fim_rect_f		# checamos se estamos no √∫ltimo Y possivel
 	
 		mv t4, t0			# reseta x
 		addi t5, t5, 1			# contamos quantas linhas em Y fizemos
@@ -547,25 +547,25 @@ fim_verifica_rgb:
 	
 	fim_rect_f:
 
-		jr ra			# retornamos da funÁ„o 
+		jr ra			# retornamos da fun√ß√£o 
 	
 	#-------------------------------------------------------------------------
-	# FunÁ„o draw_empty_rectangle: Respons·vel por desenhar a borda de um ret‚ngulo, 
+	# Fun√ß√£o draw_empty_rectangle: Respons√°vel por desenhar a borda de um ret√¢ngulo, 
 	# dado a cor e 2 pontos de diagonais opostas (cartesiano)
 	#
 	# Parametros:
-	# - Coordenada de inÌcio da imagem (passada pelo programa)
-	# - Input do usu·rio para X e Y (coordenadas iniciais)
-	# - Input do usu·rio para X e Y (coordenadas finais)
-	# - Input do usu·rio para R, G e B (descriÁ„o da cor do ret‚ngulo a ser desenhado)
+	# - Coordenada de in√≠cio da imagem (passada pelo programa)
+	# - Input do usu√°rio para X e Y (coordenadas iniciais)
+	# - Input do usu√°rio para X e Y (coordenadas finais)
+	# - Input do usu√°rio para R, G e B (descri√ß√£o da cor do ret√¢ngulo a ser desenhado)
 	#
-	# Como funciona: Com os pontos dados pelo usu·rio (e apÛs a definiÁ„o de qual È o ponto mais
-	# perto da origem e qual È o ponto mais longe da origem) e o valor RGB, definimos as vari·veis "delta X" e
-	# "delta Y", sendo estas as variaÁıes de X e Y entre as coordenadas. Primeiramente fazemos
-	# as linhas na direÁ„o X, uma partindo da origem da coordenada mais perto da origem e outra deslocada
-	# exatamante "delta Y" para cima. Fazemos pontos e os incrementamos (0x4) ‡ esquerda "delta X" vezes.
-	# ApÛs fazer estas linhas, fazemos linhas na direÁ„o de Y, uma comeÁando no ponto mais perto ‡
-	# origem e outra linha deslocada "delta X" ‡ direita. Fazemos os pontos e os incrementamos (0x100)
+	# Como funciona: Com os pontos dados pelo usu√°rio (e ap√≥s a defini√ß√£o de qual √© o ponto mais
+	# perto da origem e qual √© o ponto mais longe da origem) e o valor RGB, definimos as vari√°veis "delta X" e
+	# "delta Y", sendo estas as varia√ß√µes de X e Y entre as coordenadas. Primeiramente fazemos
+	# as linhas na dire√ß√£o X, uma partindo da origem da coordenada mais perto da origem e outra deslocada
+	# exatamante "delta Y" para cima. Fazemos pontos e os incrementamos (0x4) √† esquerda "delta X" vezes.
+	# Ap√≥s fazer estas linhas, fazemos linhas na dire√ß√£o de Y, uma come√ßando no ponto mais perto √†
+	# origem e outra linha deslocada "delta X" √† direita. Fazemos os pontos e os incrementamos (0x100)
 	# "delta Y" vezes
 	#
 	
@@ -596,14 +596,14 @@ fim_verifica_rgb:
  		verifica_coord(t3)		# verifica intervalo
  		
  		bge t2, t0, rect_vazio_continue
- 		push t2		     		# troca os 2 caso a afirmativa Xfinal > Xinicial È falsa
+ 		push t2		     		# troca os 2 caso a afirmativa Xfinal > Xinicial √© falsa
  		push t0
  		pop t2
  		pop t0
 
 	rect_vazio_continue:
  		bge t3, t1, rect_vazio_continue2
- 		push t3		    		# troca os 2 caso a afirmativa Yfinal > Yinicial È falsa
+ 		push t3		    		# troca os 2 caso a afirmativa Yfinal > Yinicial √© falsa
  		push t1
  		pop t3
  		pop t1
@@ -634,7 +634,7 @@ fim_verifica_rgb:
 	
 	XfYf_XYf_loop:				# desenha horizontal (esquerda -> direita)
 	
-		beq t4, t2, XYf_XY_loop		# checa condiÁ„o de parada
+		beq t4, t2, XYf_XY_loop		# checa condi√ß√£o de parada
 	
 		draw_point_v2(t4, t5, t6)	# desenha o ponto
 	
@@ -644,7 +644,7 @@ fim_verifica_rgb:
 
 	XYf_XY_loop:				# desenha vertical (baixo -> cima)
 
-		beq t5, t3, XY_XfY_loop		# checa condiÁ„o de parada
+		beq t5, t3, XY_XfY_loop		# checa condi√ß√£o de parada
 	
 		draw_point_v2(t4, t5, t6)	# desenha o ponto
 	
@@ -654,7 +654,7 @@ fim_verifica_rgb:
 
 	XY_XfY_loop:				# desenha horizontal (direita -> esquerda)
 
-		beq t4, t0, XfY_XfYf_loop	# checa condiÁ„o de parada
+		beq t4, t0, XfY_XfYf_loop	# checa condi√ß√£o de parada
 
 		draw_point_v2(t4, t5, t6)	# desenha o ponto
 		
@@ -664,7 +664,7 @@ fim_verifica_rgb:
 
 	XfY_XfYf_loop:				# desenha vertical (cima -> baixo)
 
-		beq t5, t1, fim_ret_vazio	# checa condiÁ„o de parada
+		beq t5, t1, fim_ret_vazio	# checa condi√ß√£o de parada
 
 		draw_point_v2(t4, t5, t6)	# desenha o ponto
 	
@@ -677,15 +677,15 @@ fim_verifica_rgb:
 		jr ra				# fim
 
 	#-------------------------------------------------------------------------
-	# FunÁ„o convert_negative: Respons·vel por passar uma imagem com valores em
+	# Fun√ß√£o convert_negative: Respons√°vel por passar uma imagem com valores em
 	# RGB para o sua forma negativa
 	#
 	# Parametros:
-	# - Coordenada de inÌcio da imagem (passada pelo programa)
+	# - Coordenada de in√≠cio da imagem (passada pelo programa)
 	#
-	# Como funciona: A partir do endereÁo de inÌcio da imagem, muda, para cada pixel,
+	# Como funciona: A partir do endere√ßo de in√≠cio da imagem, muda, para cada pixel,
 	# sua cor, de R G B para 255 - R, 255 - G, 255 - B respectivamente. Para isso usa as
-	# macros break_RGB para pegar os par‚metros e alter·-los, RGB_maker para juntar os par‚metros
+	# macros break_RGB para pegar os par√¢metros e alter√°-los, RGB_maker para juntar os par√¢metros
 	# novamente e enfim a macro draw_point_v2 para reescrever o ponto.
 	#
 	
@@ -709,7 +709,7 @@ fim_verifica_rgb:
 
 		draw_point_v2(t0, t1, t5)	# reescreve o novo ponto na tela
 	
-		addi t0, t0, 1			# prepara prÛximo pixel ‡ direita
+		addi t0, t0, 1			# prepara pr√≥ximo pixel √† direita
 	
 		beq  t0, s1, anda_y		# se x chegar no limite incrementa y
 	
@@ -717,7 +717,7 @@ fim_verifica_rgb:
 	
 	anda_y:
 		beq  t1, s1, fim_convert_negative	# fim, caso y tenha chegado no limite
-		addi t1, t1, 1				# prepara prÛxima linha de pixels acima da atual
+		addi t1, t1, 1				# prepara pr√≥xima linha de pixels acima da atual
 		li t0, 1
 	
 		b loop_convert_negative
@@ -727,16 +727,16 @@ fim_verifica_rgb:
 		jr ra				# retorna
 
 	#-------------------------------------------------------------------------
-	# FunÁ„o convert_red: Respons·vel por passar uma imagem com valores em
+	# Fun√ß√£o convert_red: Respons√°vel por passar uma imagem com valores em
 	# RGB para o sua forma avermelhada, apenas com seus valores da componente
-	# R (red) sendo levados em consideraÁ„o.
+	# R (red) sendo levados em considera√ß√£o.
 	#
 	# Parametros:
-	# - Coordenada de inÌcio da imagem (passada pelo programa)
+	# - Coordenada de in√≠cio da imagem (passada pelo programa)
 	#
-	# Como funciona: A partir do endereÁo de inÌcio da imagem, muda, para cada pixel,
+	# Como funciona: A partir do endere√ßo de in√≠cio da imagem, muda, para cada pixel,
 	# sua cor, de R G B para R, 0, 0 respectivamente. Para isso usa as
-	# macros break_RGB para pegar os par‚metros e alter·-los, RGB_maker para juntar os par‚metros
+	# macros break_RGB para pegar os par√¢metros e alter√°-los, RGB_maker para juntar os par√¢metros
 	# novamente e enfim a macro draw_point_v2 para reescrever o ponto.
 	#
 	
@@ -758,7 +758,7 @@ fim_verifica_rgb:
 
 		draw_point_v2(t0, t1, t5) 	# reescreve o novo ponto na tela
 	
-		addi t0, t0, 1			# prepara prÛximo pixel ‡ direita
+		addi t0, t0, 1			# prepara pr√≥ximo pixel √† direita
 	
 		beq  t0, s1, anda_y_r		# se x chegar no limite incrementa y
 	
@@ -766,7 +766,7 @@ fim_verifica_rgb:
 	
 	anda_y_r:
 		beq  t1, s1, fim_convert_red	# fim, caso y tenha chegado no limite
-		addi t1, t1, 1			# prepara prÛxima linha de pixels acima da atual
+		addi t1, t1, 1			# prepara pr√≥xima linha de pixels acima da atual
 		li t0, 1
 		
 		b loop_convert_red
@@ -780,7 +780,7 @@ fim_verifica_rgb:
 	# Formato RAW: sequencia de pixels no formato RGB, 8 bits por componente
 	# de cor, R o byte mais significativo 
 	#
-	# (Essa funÁ„o nos foi disponibilizada pelo professor da matÈria!)
+	# (Essa fun√ß√£o nos foi disponibilizada pelo professor da mat√©ria!)
 	#
 	# Parametros:
 	#  a0: endereco do string ".asciz" com o nome do arquivo com a imagem
@@ -788,25 +788,25 @@ fim_verifica_rgb:
 	#  a2: endereco de uma palavra na memoria para utilizar como buffer
 	#  a3: tamanho da imagem em pixels
 	#
-	# A funÁ„o foi implementada chamando o arquivo especificado, lendo 
-	# pixel a pixel da imagem, lanÁando-o num buffer e printando cada um
+	# A fun√ß√£o foi implementada chamando o arquivo especificado, lendo 
+	# pixel a pixel da imagem, lan√ßando-o num buffer e printando cada um
 	# no bitmap
   
 	load_image:
-		# salva os par„metros da funÁ„o nos tempor·rios
+		# salva os par√£metros da fun√ß√£o nos tempor√°rios
 		mv t0, a0		# nome do arquivo
 		mv t1, a1		# endereco de carga
 		mv t2, a2		# buffer para leitura de um pixel do arquivo
 	
 		# chamada de sistema para abertura de arquivo
-		#par‚metros da chamada de sistema: a7=1024, a0=string com o diretÛrio da imagem, a1 = definiÁ„o de leitura/escrita
+		#par√¢metros da chamada de sistema: a7=1024, a0=string com o diret√≥rio da imagem, a1 = defini√ß√£o de leitura/escrita
 		li a7, 1024		# chamada de sistema para abertura de arquivo
 		li a1, 0		# Abre arquivo para leitura (pode ser 0: leitura, 1: escrita)
-		ecall			# Abre um arquivo (descritor do arquivo È retornado em a0)
+		ecall			# Abre um arquivo (descritor do arquivo √© retornado em a0)
 		mv s6, a0		# salva o descritor do arquivo em s6
 	
 		mv a0, s6		# descritor do arquivo 
-		mv a1, t2		# endereÁo do buffer 
+		mv a1, t2		# endere√ßo do buffer 
 		li a2, 3		# largura do buffer
 	
 		#loop utilizado para ler pixel a pixel da imagem
@@ -815,12 +815,12 @@ fim_verifica_rgb:
 		beq a3, zero, close		#verifica se o contador de pixels da imagem chegou a 0
 		
 		#chamada de sistema para leitura de arquivo
-		#par‚metros da chamada de sistema: a7=63, a0=descritor do arquivo, a1 = endereÁo do buffer, a2 = m·ximo tamanho pra ler
-		li a7, 63			# definiÁ„o da chamada de sistema para leitura de arquivo 
+		#par√¢metros da chamada de sistema: a7=63, a0=descritor do arquivo, a1 = endere√ßo do buffer, a2 = m√°ximo tamanho pra ler
+		li a7, 63			# defini√ß√£o da chamada de sistema para leitura de arquivo 
 		ecall            		# le o arquivo
 		lw   t4, 0(a1)   		# le pixel do buffer	
 		sw   t4, 0(t1)   		# escreve pixel no display
-		addi t1, t1, 4  		# prÛximo pixel
+		addi t1, t1, 4  		# pr√≥ximo pixel
 		addi a3, a3, -1  		# decrementa countador de pixels da imagem
 		
 		j loop
@@ -828,7 +828,7 @@ fim_verifica_rgb:
 		# fecha o arquivo 
 	close:
 		# chamada de sistema para fechamento do arquivo
-		#par„metros da chamada de sistema: a7=57, a0=descritor do arquivo
+		#par√£metros da chamada de sistema: a7=57, a0=descritor do arquivo
 		li a7, 57		# chamada de sistema para fechamento do arquivo
 		mv a0, s6		# descritor do arquivo a ser fechado
 		ecall           	# fecha arquivo
